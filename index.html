@@ -1,10 +1,11 @@
+<!DOCTYPE html>
 <html>
 <head>
     <title>Open HDFC Bank App</title>
 </head>
 <body>
     <script>
-        // Start the timer when the link is clicked
+        // Record the current timestamp when the page loads
         const startTime = new Date().getTime();
 
         // Try to open the app using the schema
@@ -13,13 +14,13 @@
         // Set a fallback to App Store if the app doesn't open within 1.5 seconds
         const fallbackTimeout = setTimeout(function() {
             const elapsedTime = new Date().getTime() - startTime;
-            // If the app doesn't open in the expected time window
-            if (elapsedTime < 2000) {
+            // If the app isn't opened (i.e., if elapsed time < 1500ms), redirect to App Store
+            if (elapsedTime < 1500) {
                 window.location = "https://apps.apple.com/in/app/hdfc-bank-app-invite-only/id6504402552";
             }
-        }, 2000); // Adjust timeout (in milliseconds) based on your needs
+        }, 1500); // Adjust timeout (in milliseconds)
 
-        // Clear the timeout if the app is successfully opened (when focus is lost from the page)
+        // Cancel the timeout if the app opens (when focus is lost from the page)
         window.addEventListener("blur", function() {
             clearTimeout(fallbackTimeout);
         });

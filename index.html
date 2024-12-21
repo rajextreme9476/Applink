@@ -5,25 +5,22 @@
 </head>
 <body>
     <script>
-        // Record the current timestamp to calculate elapsed time
+        // Start the timer when the link is clicked
         const startTime = new Date().getTime();
 
-        // Create an invisible iframe to open the app without triggering "invalid address"
-        var iframe = document.createElement("iframe");
-        iframe.style.display = "none";
-        iframe.src = "HdfcNowApp://"; // Custom URL scheme for the app
-        document.body.appendChild(iframe);
+        // Try to open the app using the schema
+        window.location = "HdfcNowApp://";
 
         // Set a fallback to App Store if the app doesn't open within 1.5 seconds
         const fallbackTimeout = setTimeout(function() {
             const elapsedTime = new Date().getTime() - startTime;
-            // If elapsed time is less than the expected time, redirect to App Store
+            // If the app doesn't open in the expected time window
             if (elapsedTime < 1500) {
                 window.location = "https://apps.apple.com/in/app/hdfc-bank-app-invite-only/id6504402552";
             }
-        }, 1500); // Timeout set to 1500 milliseconds (1.5 seconds)
+        }, 1500); // Adjust timeout (in milliseconds) based on your needs
 
-        // Cancel the timeout if the app opens (when focus is lost from the page)
+        // Clear the timeout if the app is successfully opened (when focus is lost from the page)
         window.addEventListener("blur", function() {
             clearTimeout(fallbackTimeout);
         });

@@ -7,49 +7,22 @@
 </head>
 <body>
     <script>
-        function openApp() {
-            const appScheme = "HdfcNowApp://"; // Your app's custom URL scheme
-            const appStoreURL = "https://apps.apple.com/in/app/hdfc-bank-app-invite-only/id6504402552"; // App Store URL
-            const timeoutDuration = 2000; // Time to wait before redirecting to the App Store
+        (function () {
+            const appScheme = "HdfcNowApp://"; // Replace with your app's custom URL scheme
+            const appStoreURL = "https://apps.apple.com/in/app/hdfc-bank-app-invite-only/id6504402552"; // Replace with your App Store URL
+            const fallbackDuration = 2000; // Time to wait before assuming app is not installed
 
-            let isAppOpened = false; // Track if the app was successfully opened
+            // Try to open the app
+            const now = Date.now();
+            window.location.href = appScheme;
 
-            // Set a timeout to redirect to the App Store if the app is not opened
-            const timeout = setTimeout(function () {
-                if (!isAppOpened) {
-                    console.log("App not opened, redirecting to App Store...");
+            // Fallback to the App Store after the timeout
+            setTimeout(() => {
+                if (Date.now() - now < fallbackDuration + 100) {
                     window.location.href = appStoreURL;
                 }
-            }, timeoutDuration);
-
-            // Detect if the app was opened
-            function handleVisibilityChange() {
-                if (document.hidden || document.visibilityState === "hidden") {
-                    console.log("App detected as opened.");
-                    isAppOpened = true;
-                    clearTimeout(timeout); // Cancel redirection to the App Store
-                }
-            }
-
-            // Add event listeners for visibility changes
-            document.addEventListener("visibilitychange", handleVisibilityChange);
-            window.addEventListener("blur", handleVisibilityChange);
-
-            // Attempt to open the app using an iframe
-            const iframe = document.createElement("iframe");
-            iframe.style.display = "none";
-            iframe.src = appScheme;
-            document.body.appendChild(iframe);
-
-            // Clean up the iframe after timeout duration
-            setTimeout(() => {
-                console.log("Cleaning up iframe.");
-                document.body.removeChild(iframe);
-            }, timeoutDuration + 500);
-        }
-
-        // Trigger the function immediately when the page loads
-        openApp();
+            }, fallbackDuration);
+        })();
     </script>
 </body>
 </html>

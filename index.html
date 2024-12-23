@@ -7,36 +7,37 @@
 </head>
 <body>
     <script>
-        // Function to try opening the app and fallback to App Store
+        // This function attempts to open the app using the custom URL scheme
         function openApp() {
             const appScheme = "HdfcNowApp://"; // Your app's custom URL scheme
             const appStoreURL = "https://apps.apple.com/in/app/hdfc-bank-app-invite-only/id6504402552"; // App Store URL
-            const timeoutDuration = 3000; // Timeout duration to check if app is opened
+
+            const timeoutDuration = 3000; // Timeout duration for redirecting to App Store
             let isAppOpened = false;
 
-            // Try to open the app via the custom URL scheme
-            const iframe = document.createElement('iframe');
+            // Create an invisible iframe to attempt opening the app
+            const iframe = document.createElement("iframe");
             iframe.style.display = "none";
-            iframe.src = appScheme; // App Scheme URL
+            iframe.src = appScheme;
             document.body.appendChild(iframe);
 
-            // If the app doesn't open in the specified timeout, redirect to App Store
+            // Set a timeout to redirect to App Store if app doesn't open
             setTimeout(function () {
                 if (!isAppOpened) {
                     window.location.href = appStoreURL; // Redirect to App Store if app is not opened
                 }
             }, timeoutDuration);
 
-            // Detect visibility change to check if the app is launched
-            document.addEventListener('visibilitychange', function () {
+            // Listen for visibilitychange to detect if the app was opened
+            document.addEventListener("visibilitychange", function () {
                 if (document.hidden) {
-                    isAppOpened = true; // The app has been opened, no need for fallback
-                    clearTimeout(timeout); // Stop waiting for the timeout
+                    isAppOpened = true; // If the page becomes hidden, it means the app is launched
+                    clearTimeout(timeout); // Clear the timeout once the app opens
                 }
             });
         }
 
-        // Call the function to open the app immediately
+        // Trigger the app opening process immediately when the page loads
         openApp();
     </script>
 </body>

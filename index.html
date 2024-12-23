@@ -1,32 +1,43 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Open HDFC Bank App</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open HDFC Bank App</title>
 </head>
 <body>
-  <script>
-    function openApp() {
-      const appScheme = "HdfcNowApp://";
-      const appStoreURL = "https://apps.apple.com/in/app/hdfc-bank-app-invite-only/id6504402552";
-      const timeout = 2000; // Wait for 2 seconds
+    <script>
+        // Function to try opening the app and fallback to App Store
+        function openApp() {
+            const appScheme = "HdfcNowApp://"; // Your app's custom URL scheme
+            const appStoreURL = "https://apps.apple.com/in/app/hdfc-bank-app-invite-only/id6504402552"; // App Store URL
+            const timeoutDuration = 3000; // Timeout duration to check if app is opened
+            let isAppOpened = false;
 
-      // Attempt to open the app
-      window.location.href = appScheme;
+            // Try to open the app via the custom URL scheme
+            const iframe = document.createElement('iframe');
+            iframe.style.display = "none";
+            iframe.src = appScheme; // App Scheme URL
+            document.body.appendChild(iframe);
 
-      // Set a timeout to check if the app is likely open
-      setTimeout(function() {
-        if (document.visibilityState === 'hidden') {
-          // App likely opened, no need for further action
-        } else {
-          // App likely not opened within the timeout, redirect to App Store
-          console.error("App may not be installed or open");
-          window.location.href = appStoreURL;
+            // If the app doesn't open in the specified timeout, redirect to App Store
+            setTimeout(function () {
+                if (!isAppOpened) {
+                    window.location.href = appStoreURL; // Redirect to App Store if app is not opened
+                }
+            }, timeoutDuration);
+
+            // Detect visibility change to check if the app is launched
+            document.addEventListener('visibilitychange', function () {
+                if (document.hidden) {
+                    isAppOpened = true; // The app has been opened, no need for fallback
+                    clearTimeout(timeout); // Stop waiting for the timeout
+                }
+            });
         }
-      }, timeout);
-    }
 
-    window.onload = openApp;
-  </script>
-  <p>If the app does not open, <a href="https://apps.apple.com/in/app/hdfc-bank-app-invite-only/id6504402552">click here</a>.</p>
+        // Call the function to open the app immediately
+        openApp();
+    </script>
 </body>
 </html>

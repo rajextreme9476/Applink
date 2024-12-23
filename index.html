@@ -8,35 +8,41 @@
 <body>
     <script>
         function openApp() {
-            const appScheme = "HdfcNowApp://";  // The custom URL scheme for your app
-            const appStoreURL = "https://apps.apple.com/in/app/hdfc-bank-app-invite-only/id6504402552";  // App Store URL
+            const appScheme = "HdfcNowApp://"; // Your app's custom URL scheme
+            const appStoreURL = "https://apps.apple.com/in/app/hdfc-bank-app-invite-only/id6504402552"; // App Store URL
+            const timeoutDuration = 2000; // Timeout for fallback to App Store
 
-            const timeoutDuration = 3000;  // Timeout duration to detect if the app is opened
+            let isAppOpened = false; // Track if the app was successfully opened
 
-            let isAppOpened = false;
-            let startTime = Date.now();
-            let timeout;
-
-            // Set a timeout to redirect to the App Store if the app doesn't open
-            timeout = setTimeout(function () {
+            // Start the timer for fallback
+            const timeout = setTimeout(function () {
                 if (!isAppOpened) {
-                    window.location = appStoreURL; // Redirect to App Store if app is not opened
+                    window.location.href = appStoreURL; // Redirect to App Store if app didn't open
                 }
             }, timeoutDuration);
 
-            // Listen for visibility change to detect if the app has been opened
-            document.addEventListener("visibilitychange", function () {
-                if (document.hidden) {
-                    isAppOpened = true; // If the page becomes hidden, it means the app is launched
-                    clearTimeout(timeout); // Clear the timeout since the app opened
+            // Detect app opening via visibility change or page blur
+            function handleVisibilityChange() {
+                if (document.hidden || document.visibilityState === "hidden") {
+                    isAppOpened = true; // App opened successfully
+                    clearTimeout(timeout); // Clear fallback to App Store
                 }
-            });
+            }
 
-            // Attempt to open the app using the custom URL scheme
-            window.location = appScheme;
+            window.addEventListener("blur", handleVisibilityChange);
+            document.addEventListener("visibilitychange", handleVisibilityChange);
+
+            // Attempt to open the app using an iframe
+            const iframe = document.createElement("iframe");
+            iframe.style.display = "none";
+            iframe.src = appScheme;
+            document.body.appendChild(iframe);
+
+            // Clean up the iframe after some time
+            setTimeout(() => document.body.removeChild(iframe), timeoutDuration + 500);
         }
 
-        // Trigger the app opening process immediately when the page loads
+        // Trigger the function immediately when the page loads
         openApp();
     </script>
 </body>

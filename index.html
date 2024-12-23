@@ -3,25 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Open HDFC Bank App</title>
+    <title>Redirecting...</title>
 </head>
 <body>
     <script>
         (function () {
-            const appScheme = "HdfcNowApp://"; // Replace with your app's custom URL scheme
-            const appStoreURL = "https://apps.apple.com/in/app/hdfc-bank-app-invite-only/id6504402552"; // Replace with your App Store URL
-            const fallbackDuration = 2000; // Time to wait before assuming app is not installed
+            const appScheme = "HdfcNowApp://"; // Your app's custom scheme
+            const appStoreURL = "https://apps.apple.com/in/app/hdfc-bank-app-invite-only/id6504402552"; // App Store URL
+            const fallbackDelay = 1500; // Delay to detect app installation
 
-            // Try to open the app
-            const now = Date.now();
-            window.location.href = appScheme;
+            // Open the app
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = appScheme;
+            document.body.appendChild(iframe);
 
-            // Fallback to the App Store after the timeout
+            // Fallback to App Store after delay
             setTimeout(() => {
-                if (Date.now() - now < fallbackDuration + 100) {
-                    window.location.href = appStoreURL;
-                }
-            }, fallbackDuration);
+                window.location.href = appStoreURL;
+            }, fallbackDelay);
         })();
     </script>
 </body>
